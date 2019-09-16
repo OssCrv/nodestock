@@ -6,8 +6,8 @@ const path = require('path');
 const request = require('request');
 const bodyParser = require('body-parser');
 
-const PORT = process.env.port || 5000;
-
+const PORT = process.env.PORT || 5000;
+const host = '0.0.0.0';
 
 // Use body parser middleware
 app.use(bodyParser.urlencoded({extended: false}));
@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 function call_api(finishedAPI, ticker){
 // API KEY pk_25028e0043ef489ba145026dd2a4e0bf
 if(ticker == null){
-	ticker = "fb";
+	ticker = "FB";
 }
 request('https://cloud.iexapis.com/stable/stock/'+ ticker +'/quote?token=pk_25028e0043ef489ba145026dd2a4e0bf', {json: true}, (err, res, body) =>{
 	if (err){return console.log(err);}
@@ -70,4 +70,6 @@ app.get('/about.html', function (req, res) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.listen(PORT, () => console.log('Server listening on port'))
+app.listen(process.env.PORT || 5000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});
