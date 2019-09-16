@@ -16,6 +16,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Create call_API function
 function call_api(finishedAPI, ticker){
 // API KEY pk_25028e0043ef489ba145026dd2a4e0bf
+if(ticker == null){
+	ticker = "fb";
+}
 request('https://cloud.iexapis.com/stable/stock/'+ ticker +'/quote?token=pk_25028e0043ef489ba145026dd2a4e0bf', {json: true}, (err, res, body) =>{
 	if (err){return console.log(err);}
 	if(res.statusCode === 200){
@@ -43,15 +46,19 @@ app.get('/', function (req, res) {
 	});
 });
 
+
 //Set handlebars POST index route
 app.post('/', function (req, res) {
 	call_api(function(doneAPI){
 		//posted_stuff = req.body.stock_ticker;
 		res.render('home',{
-    	stock: doneAPI
+    	stock: doneAPI,
     	});
-	});
+	}, req.body.stock_ticker);
+
 });
+
+
 
 //Create about page route
 app.get('/about.html', function (req, res) {
